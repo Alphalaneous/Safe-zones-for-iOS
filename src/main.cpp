@@ -56,10 +56,16 @@ static inline std::string getClassName(cocos2d::CCObject* obj, bool removeNamesp
 	return ret;
 }
 
+CCPoint convertToWorldSpaceAR(CCNode* node, const CCPoint& nodePoint)
+{
+    CCPoint pt = ccpAdd(nodePoint, node->m_obAnchorPointInPoints);
+    return convertToWorldSpace(pt);
+}
+
 void checkPosition(CCNode* node) {
 	if (!node || !node->getParent() || utils::string::contains(node->getParent()->getID(), "-navigation-menu")) return;
 
-	CCPoint worldPosition = node->convertToWorldSpaceAR({0, 0});
+	CCPoint worldPosition = convertToWorldSpaceAR(node, {0, 0});
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	float scaledWidth = node->getContentSize().width * node->getScaleX();
