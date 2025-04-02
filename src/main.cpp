@@ -59,7 +59,7 @@ static inline std::string getClassName(cocos2d::CCObject* obj, bool removeNamesp
 CCPoint convertToWorldSpaceAR(CCNode* node, const CCPoint& nodePoint)
 {
     CCPoint pt = ccpAdd(nodePoint, node->m_obAnchorPointInPoints);
-    return convertToWorldSpace(pt);
+    return node->convertToWorldSpace(pt);
 }
 
 void checkPosition(CCNode* node) {
