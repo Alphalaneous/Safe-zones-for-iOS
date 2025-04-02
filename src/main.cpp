@@ -5,6 +5,7 @@
 #include <Geode/modify/EditorUI.hpp>
 #include <Geode/modify/LevelInfoLayer.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
+#include <Geode/modify/GauntletSelectLayer.hpp>
 #include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
 
 using namespace geode::prelude;
@@ -34,7 +35,8 @@ std::vector<std::string> g_exclusions = {
 };
 
 std::vector<std::string> g_exclusionsClass = {
-	"LevelSelectLayer"
+	"LevelSelectLayer",
+	"GauntletSelectLayer"
 };
 
 static inline std::string getClassName(cocos2d::CCObject* obj, bool removeNamespace = false) {
@@ -181,6 +183,42 @@ class $nodeModify(StatsLayer) {
 	void modify() {
 		modifyButtons(this);
 	}
+};
+
+class $modify(MyGauntletSelectLayer, GauntletSelectLayer) {
+
+    bool init(int p0) {
+		if (!GauntletSelectLayer::init(p0)) return false;
+
+		if (CCNode* node = getChildByID("back-menu")) {
+			checkPosition(node);
+		}
+
+		if (CCNode* node = getChildByID("bottom-left-menu")) {
+			checkPosition(node);
+		}
+
+		if (CCNode* node = getChildByID("bottom-right-menu")) {
+			checkPosition(node);
+		}
+
+		if (CCNode* node = getChildByID("top-right-menu")) {
+			checkPosition(node);
+		}
+
+		if (CCNode* node = getChildByID("scroll-buttons-menu")) {
+			if (CCNode* btn = node->getChildByID("left-button")) {
+				checkPosition(btn);
+			}
+			if (CCNode* btn = node->getChildByID("right-button")) {
+				checkPosition(btn);
+			}
+		}
+
+
+		return true;
+	}
+
 };
 
 class $modify(MyLevelInfoLayer, LevelInfoLayer) {
