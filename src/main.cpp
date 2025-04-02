@@ -7,6 +7,8 @@
 
 using namespace geode::prelude;
 
+bool g_doSafeArea = false;
+
 #define public_cast(value, member) [](auto* v) { \
     class FriendClass__; \
     using T = std::remove_pointer<decltype(v)>::type; \
@@ -56,16 +58,20 @@ static inline std::string getClassName(cocos2d::CCObject* obj, bool removeNamesp
 	return ret;
 }
 
-CCPoint convertToWorldSpaceAR(CCNode* node, const CCPoint& nodePoint)
-{
-    CCPoint pt = ccpAdd(nodePoint, node->m_obAnchorPointInPoints);
-    return node->convertToWorldSpace(pt);
+void manualOffset(CCNode* node, float offset) {
+	if (!node || !node->getParent() || !g_doSafeArea) return;
+	CCPoint worldPosition = node->convertToWorldSpaceAR({0, 0});
+	worldPosition.x += offset;
+	CCPoint newNodePos = node->getParent()->convertToNodeSpace(worldPosition);
+	newNodePos.y = node->getPositionY();
+
+	node->setPosition(newNodePos);
 }
 
 void checkPosition(CCNode* node) {
-	if (!node || !node->getParent() || utils::string::contains(node->getParent()->getID(), "-navigation-menu")) return;
+	if (!node || !node->getParent() || utils::string::contains(node->getParent()->getID(), "-navigation-menu") || !g_doSafeArea) return;
 
-	CCPoint worldPosition = convertToWorldSpaceAR(node, {0, 0});
+	CCPoint worldPosition = node->convertToWorldSpaceAR({0, 0});
 	CCSize winSize = CCDirector::sharedDirector()->getWinSize();
 
 	float scaledWidth = node->getContentSize().width * node->getScaleX();
@@ -152,7 +158,7 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
 		if (!EditorPauseLayer::init(editorLayer)) return false;
 
 		if (CCNode* node = getChildByID("small-actions-menu")) {
-			checkPosition(node);
+			manualOffset(node, -15);
 		}
 
 		if (CCNode* node = getChildByID("actions-menu")) {
@@ -167,11 +173,19 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
 			checkPosition(node);
 		}
 
+		if (CCNode* node = getChildByID("info-menu")) {
+			checkPosition(node);
+		}
+
 		return true;
 	}
 };
 
 class $modify(MyEditorUI, EditorUI) {
+
+	static void onModify(auto& self) {
+        (void) self.setHookPriority("EditorUI::init", -10000); 
+    }
 
     bool init(LevelEditorLayer* editorLayer) {
 		if (!EditorUI::init(editorLayer)) return false;
@@ -181,7 +195,7 @@ class $modify(MyEditorUI, EditorUI) {
 		}
 
 		if (CCNode* node = getChildByID("link-menu")) {
-			checkPosition(node);
+			manualOffset(node, 30);
 		}
 
 		if (CCNode* node = getChildByID("playback-menu")) {
@@ -197,6 +211,14 @@ class $modify(MyEditorUI, EditorUI) {
 		}
 
 		if (CCNode* node = getChildByID("layer-menu")) {
+			checkPosition(node);
+		}
+
+		if (CCNode* node = getChildByID("undo-menu")) {
+			checkPosition(node);
+		}
+
+		if (CCNode* node = getChildByID("settings-menu")) {
 			checkPosition(node);
 		}
 
@@ -311,6 +333,7 @@ $execute {
 		CCSize winSize = CCDirector::get()->getWinSize();
 
 		if (winSize.width > 569) {
+			g_doSafeArea = true;
 			CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
 		}
 	});
