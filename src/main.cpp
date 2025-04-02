@@ -7,25 +7,11 @@
 #include <Geode/modify/EditorPauseLayer.hpp>
 #include <Geode/modify/GauntletSelectLayer.hpp>
 #include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
+#include <alphalaneous.alphas_geode_utils/include/Utils.h>
 
 using namespace geode::prelude;
 
 bool g_doSafeArea = false;
-
-#define public_cast(value, member) [](auto* v) { \
-    class FriendClass__; \
-    using T = std::remove_pointer<decltype(v)>::type; \
-    class FriendeeClass__: public T { \
-    protected: \
-        friend FriendClass__; \
-    }; \
-    class FriendClass__ { \
-    public: \
-        auto& get(FriendeeClass__* v) { return v->member; } \
-    } c; \
-    return c.get(reinterpret_cast<FriendeeClass__*>(v)); \
-}(value)
-
 
 std::vector<std::string> g_exclusions = {
 	"MenuLayer",
@@ -36,31 +22,9 @@ std::vector<std::string> g_exclusions = {
 
 std::vector<std::string> g_exclusionsClass = {
 	"LevelSelectLayer",
-	"GauntletSelectLayer"
+	"GauntletSelectLayer",
+	"GJPromoPopup"
 };
-
-static inline std::string getClassName(cocos2d::CCObject* obj, bool removeNamespace = false) {
-	if (!obj) return "nullptr";
-
-	std::string ret;
-
-#ifdef GEODE_IS_WINDOWS
-	ret = typeid(*obj).name() + 6;
-#else 
-	int status = 0;
-	auto demangle = abi::__cxa_demangle(typeid(*obj).name(), 0, 0, &status);
-	if (status == 0) {
-		ret = demangle;
-	}
-	free(demangle);
-#endif
-	if (removeNamespace) {
-		std::vector<std::string> colonSplit = geode::utils::string::split(ret, "::");
-		ret = colonSplit[colonSplit.size()-1];
-	}
-
-	return ret;
-}
 
 void manualOffset(CCNode* node, float offset) {
 	if (!node || !node->getParent() || !g_doSafeArea) return;
@@ -112,7 +76,7 @@ void modifyButtons(CCNode* node) {
 			child->setUserObject("checked"_spr, CCBool::create(true));
 			
 			if (std::find(g_exclusions.begin(), g_exclusions.end(), child->getID()) != g_exclusions.end()) continue;
-			if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), getClassName(child)) != g_exclusionsClass.end()) continue;
+			if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), AlphaUtils::Cocos::getClassName(child)) != g_exclusionsClass.end()) continue;
 
 			if (std::string_view(child->getID()) == "level-count-label") {
 				checkPosition(child);
