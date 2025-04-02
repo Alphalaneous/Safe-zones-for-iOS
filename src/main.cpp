@@ -3,7 +3,9 @@
 #include <Geode/modify/SecretRewardsLayer.hpp>
 #include <Geode/modify/LevelSelectLayer.hpp>
 #include <Geode/modify/EditorUI.hpp>
+#include <Geode/modify/LevelInfoLayer.hpp>
 #include <Geode/modify/EditorPauseLayer.hpp>
+#include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
 
 using namespace geode::prelude;
 
@@ -102,6 +104,35 @@ void checkPosition(CCNode* node) {
 	node->setPosition(newNodePos);
 }
 
+void modifyButtons(CCNode* node) {
+	for (CCNode* child : CCArrayExt<CCNode*>(node->getChildren())) {
+		if (!child->getUserObject("checked"_spr)) {
+			child->setUserObject("checked"_spr, CCBool::create(true));
+			
+			if (std::find(g_exclusions.begin(), g_exclusions.end(), child->getID()) != g_exclusions.end()) continue;
+			if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), getClassName(child)) != g_exclusionsClass.end()) continue;
+
+			if (std::string_view(child->getID()) == "level-count-label") {
+				checkPosition(child);
+				continue;
+			}
+			if (CCMenu* menu = typeinfo_cast<CCMenu*>(child)) {
+				if (menu->getLayout()) {
+					checkPosition(child);
+					continue;
+				}
+			}
+			if (typeinfo_cast<CCMenuItem*>(child)) {
+				checkPosition(child);
+				continue;
+			}
+
+			modifyButtons(child);
+		}
+	}
+}
+
+
 class SceneHandler : public CCNode {
 public:
 	static SceneHandler* create() {
@@ -112,30 +143,6 @@ public:
 
 	CCScene* m_currentScene = nullptr;
 	
-	void modifyButtons(CCNode* node) {
-		for (CCNode* child : CCArrayExt<CCNode*>(node->getChildren())) {
-			if (!child->getUserObject("checked"_spr)) {
-				child->setUserObject("checked"_spr, CCBool::create(true));
-				
-				if (std::find(g_exclusions.begin(), g_exclusions.end(), child->getID()) != g_exclusions.end()) continue;
-				if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), getClassName(child)) != g_exclusionsClass.end()) continue;
-
-				if (CCMenu* menu = typeinfo_cast<CCMenu*>(child)) {
-					if (menu->getLayout()) {
-						checkPosition(child);
-						continue;
-					}
-				}
-				if (typeinfo_cast<CCMenuItem*>(child)) {
-					checkPosition(child);
-					continue;
-				}
-
-				modifyButtons(child);
-			}
-		}
-	}
-
 	void checkForChildrenChange(float dt) {
 		modifyButtons(this);
 	}
@@ -150,6 +157,68 @@ public:
 			m_currentScene->schedule(schedule_selector(SceneHandler::checkForChildrenChange));
 		}
 	}
+};
+
+class $nodeModify(AchievementsLayer) {
+	void modify() {
+		modifyButtons(this);
+	}
+};
+
+class $nodeModify(OptionsLayer) {
+	void modify() {
+		modifyButtons(this);
+	}
+};
+
+class $nodeModify(GJMoreGamesLayer) {
+	void modify() {
+		modifyButtons(this);
+	}
+};
+
+class $nodeModify(StatsLayer) {
+	void modify() {
+		modifyButtons(this);
+	}
+};
+
+class $modify(MyLevelInfoLayer, LevelInfoLayer) {
+
+    bool init(GJGameLevel* level, bool challenge) {
+		if (!LevelInfoLayer::init(level, challenge)) return false;
+
+		if (CCNode* node = getChildByID("garage-menu")) {
+			for (CCNode* btn : CCArrayExt<CCNode*>(node->getChildren())) {
+				checkPosition(btn);
+			}
+		}
+
+		if (CCNode* node = getChildByID("other-menu")) {
+			if (CCNode* node2 = node->getChildByID("favorite-button")) {
+				manualOffset(node2, 30);
+			}
+			if (CCNode* node2 = node->getChildByID("move-up-button")) {
+				manualOffset(node2, -30);
+			}
+			if (CCNode* node2 = node->getChildByID("move-down-button")) {
+				manualOffset(node2, -30);
+			}
+			if (CCNode* node2 = node->getChildByID("folder-button")) {
+				manualOffset(node2, -30);
+			}
+			if (CCNode* node2 = node->getChildByID("list-button")) {
+				manualOffset(node2, -30);
+			}
+		}
+
+		if (CCNode* node = getChildByID("actions-menu")) {
+			checkPosition(node);
+		}
+
+		return true;
+	}
+
 };
 
 class $modify(MyEditorPauseLayer, EditorPauseLayer) {
@@ -332,9 +401,9 @@ $execute {
 	Loader::get()->queueInMainThread([]{
 		CCSize winSize = CCDirector::get()->getWinSize();
 
-		if (winSize.width > 569) {
+		//if (winSize.width > 569) {
 			g_doSafeArea = true;
 			CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
-		}
+		//}
 	});
 }
