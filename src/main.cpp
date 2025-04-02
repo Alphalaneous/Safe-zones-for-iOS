@@ -1,11 +1,4 @@
 #include <Geode/Geode.hpp>
-#include <Geode/modify/MenuLayer.hpp>
-#include <Geode/modify/SecretRewardsLayer.hpp>
-#include <Geode/modify/LevelSelectLayer.hpp>
-#include <Geode/modify/EditorUI.hpp>
-#include <Geode/modify/LevelInfoLayer.hpp>
-#include <Geode/modify/EditorPauseLayer.hpp>
-#include <Geode/modify/GauntletSelectLayer.hpp>
 #include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
 #include <alphalaneous.alphas_geode_utils/include/Utils.h>
 
@@ -23,7 +16,10 @@ std::vector<std::string> g_exclusions = {
 std::vector<std::string> g_exclusionsClass = {
 	"LevelSelectLayer",
 	"GauntletSelectLayer",
-	"GJPromoPopup"
+	"GJPromoPopup",
+	"EventsPush",
+	"RecordLayer",
+	"LoadMacroLayer"
 };
 
 void manualOffset(CCNode* node, float offset) {
@@ -149,10 +145,62 @@ class $nodeModify(StatsLayer) {
 	}
 };
 
-class $modify(MyGauntletSelectLayer, GauntletSelectLayer) {
+class $nodeModify(MoreOptionsLayer) {
+	void modify() {
+		modifyButtons(this);
+	}
+};
 
-    bool init(int p0) {
-		if (!GauntletSelectLayer::init(p0)) return false;
+class $nodeModify(GJGarageLayer) {
+	void modify() {
+		if (CCNode* node = getChildByID("stars-label")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("stars-icon")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("moons-label")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("moons-icon")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("coins-label")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("coins-icon")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("user-coins-label")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("user-coins-icon")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("orbs-label")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("orbs-icon")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("diamonds-label")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("diamonds-icon")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("stars-label")) {
+			checkPosition(node);
+		}
+		if (CCNode* node = getChildByID("stars-icon")) {
+			checkPosition(node);
+		}
+	}
+};
+
+class $nodeModify(GauntletSelectLayer) {
+
+    void modify() {
 
 		if (CCNode* node = getChildByID("back-menu")) {
 			checkPosition(node);
@@ -178,21 +226,15 @@ class $modify(MyGauntletSelectLayer, GauntletSelectLayer) {
 				checkPosition(btn);
 			}
 		}
-
-
-		return true;
 	}
-
 };
 
-class $modify(MyLevelInfoLayer, LevelInfoLayer) {
+class $nodeModify(LevelInfoLayer) {
 
-    bool init(GJGameLevel* level, bool challenge) {
-		if (!LevelInfoLayer::init(level, challenge)) return false;
-
+    void modify() {
 		if (CCNode* node = getChildByID("garage-menu")) {
 			for (CCNode* btn : CCArrayExt<CCNode*>(node->getChildren())) {
-				checkPosition(btn);
+				manualOffset(btn, -30);
 			}
 		}
 
@@ -217,17 +259,12 @@ class $modify(MyLevelInfoLayer, LevelInfoLayer) {
 		if (CCNode* node = getChildByID("actions-menu")) {
 			checkPosition(node);
 		}
-
-		return true;
 	}
-
 };
 
-class $modify(MyEditorPauseLayer, EditorPauseLayer) {
+class $nodeModify(EditorPauseLayer) {
 
-    bool init(LevelEditorLayer* editorLayer) {
-		if (!EditorPauseLayer::init(editorLayer)) return false;
-
+    void modify() {
 		if (CCNode* node = getChildByID("small-actions-menu")) {
 			manualOffset(node, -15);
 		}
@@ -247,20 +284,12 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
 		if (CCNode* node = getChildByID("info-menu")) {
 			checkPosition(node);
 		}
-
-		return true;
 	}
 };
 
-class $modify(MyEditorUI, EditorUI) {
+class $nodeModify(EditorUI) {
 
-	static void onModify(auto& self) {
-        (void) self.setHookPriority("EditorUI::init", -10000); 
-    }
-
-    bool init(LevelEditorLayer* editorLayer) {
-		if (!EditorUI::init(editorLayer)) return false;
-
+    void modify() {
 		if (CCNode* node = getChildByID("zoom-menu")) {
 			checkPosition(node);
 		}
@@ -292,17 +321,12 @@ class $modify(MyEditorUI, EditorUI) {
 		if (CCNode* node = getChildByID("settings-menu")) {
 			checkPosition(node);
 		}
-
-
-		return true;
 	}
 };
 
-class $modify(MyLevelSelectLayer, LevelSelectLayer) {
+class $nodeModify(LevelSelectLayer) {
 
-    bool init(int page) {
-		if (!LevelSelectLayer::init(page)) return false;
-
+    void modify() {
 		if (CCNode* node = getChildByID("info-menu")) {
 			for (CCNode* btn : CCArrayExt<CCNode*>(node->getChildren())) {
 				checkPosition(btn);
@@ -323,17 +347,12 @@ class $modify(MyLevelSelectLayer, LevelSelectLayer) {
 				checkPosition(btn);
 			}
 		}
-
-		return true;
 	}
-
 };
 
-class $modify(MySecretRewardsLayer, SecretRewardsLayer) {
+class $nodeModify(SecretRewardsLayer) {
 
-    bool init(bool p0) {
-		if (!SecretRewardsLayer::init(p0)) return false;
-
+    void modify() {
 		if (CCNode* node = getChildByID("exit-menu")) {
 			if (CCNode* btn = node->getChildByType<CCMenuItemSpriteExtra*>(0)) {
 				checkPosition(btn);
@@ -348,16 +367,12 @@ class $modify(MySecretRewardsLayer, SecretRewardsLayer) {
 				checkPosition(btn);
 			}
 		}
-		
-		return true;
 	}
 };
 
-class $modify(MyMenuLayer, MenuLayer) {
+class $nodeModify(MenuLayer) {
 
-	bool init() {
-		if (!MenuLayer::init()) return false;
-
+	void modify() {
 		if (CCNode* node = getChildByID("profile-menu")) {
 			checkPosition(node);
 		}
@@ -393,10 +408,7 @@ class $modify(MyMenuLayer, MenuLayer) {
 		if (CCNode* node = getChildByID("close-menu")) {
 			checkPosition(node);
 		}
-
-		return true;
 	}
-
 };
 	
 $execute {
