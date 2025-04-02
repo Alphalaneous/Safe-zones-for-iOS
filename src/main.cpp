@@ -241,7 +241,7 @@ class $modify(MyEditorPauseLayer, EditorPauseLayer) {
 		}
 
 		if (CCNode* node = getChildByID("settings-menu")) {
-			checkPosition(node);
+			manualOffset(node, -18);
 		}
 
 		if (CCNode* node = getChildByID("info-menu")) {
