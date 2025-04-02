@@ -154,46 +154,46 @@ class $nodeModify(MoreOptionsLayer) {
 class $nodeModify(GJGarageLayer) {
 	void modify() {
 		if (CCNode* node = getChildByID("stars-label")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("stars-icon")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("moons-label")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("moons-icon")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("coins-label")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("coins-icon")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("user-coins-label")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("user-coins-icon")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("orbs-label")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("orbs-icon")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("diamonds-label")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
 		if (CCNode* node = getChildByID("diamonds-icon")) {
-			checkPosition(node);
+			manualOffset(node, -30);
 		}
-		if (CCNode* node = getChildByID("stars-label")) {
-			checkPosition(node);
+		if (CCNode* node = getChildByID("diamond-shards-label")) {
+			manualOffset(node, -30);
 		}
-		if (CCNode* node = getChildByID("stars-icon")) {
-			checkPosition(node);
+		if (CCNode* node = getChildByID("diamond-shards-icon")) {
+			manualOffset(node, -30);
 		}
 	}
 };
@@ -394,7 +394,12 @@ class $nodeModify(MenuLayer) {
 		}
 
 		if (CCNode* node = getChildByID("player-username")) {
-			checkPosition(node);
+			if (CCNode* profile = getChildByID("profile-menu")) {
+				if (CCNode* profileButton = profile->getChildByID("profile-button")) {
+					CCPoint world = profileButton->convertToWorldSpaceAR({0, 0});
+					node->setPositionX(world.x);
+				}
+			}
 		}
 
 		if (CCNode* node = getChildByID("top-right-menu")) {

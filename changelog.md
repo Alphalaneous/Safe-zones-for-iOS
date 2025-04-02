@@ -1,3 +1,7 @@
+# 1.0.2
+- Actially Fix Stats Position in Garage
+- Center Username
+
 # 1.0.1
 - Fix Garage button position
 - Fix MoreOptionsLayer
