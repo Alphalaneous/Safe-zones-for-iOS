@@ -1,3 +1,7 @@
+# 1.0.3
+- Fix AnchorLayout issue
+- Exclude ModPopup
+
 # 1.0.2
 - Actially Fix Stats Position in Garage
 - Center Username

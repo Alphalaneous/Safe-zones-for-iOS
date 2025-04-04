@@ -6,7 +6,7 @@
 	},
 	"id": "alphalaneous.safe_zones_for_ios",
 	"name": "Safe zones for iOS",
-	"version": "v1.0.2",
+	"version": "v1.0.3",
 	"developer": "Alphalaneous",
 	"description": "Pushes buttons away from the left and right edges",
 	"dependencies": [

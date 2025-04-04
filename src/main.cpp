@@ -19,7 +19,8 @@ std::vector<std::string> g_exclusionsClass = {
 	"GJPromoPopup",
 	"EventsPush",
 	"RecordLayer",
-	"LoadMacroLayer"
+	"LoadMacroLayer",
+	"ModPopup"
 };
 
 void manualOffset(CCNode* node, float offset) {
@@ -79,7 +80,7 @@ void modifyButtons(CCNode* node) {
 				continue;
 			}
 			if (CCMenu* menu = typeinfo_cast<CCMenu*>(child)) {
-				if (menu->getLayout()) {
+				if (Layout* layout = menu->getLayout(); !typeinfo_cast<AnchorLayout*>(layout)) {
 					checkPosition(child);
 					continue;
 				}
