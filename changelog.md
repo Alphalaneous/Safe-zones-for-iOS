@@ -1,3 +1,6 @@
+# 1.0.4
+- Exclude ModSettingsPopup
+
 # 1.0.3
 - Fix AnchorLayout issue
 - Exclude ModPopup

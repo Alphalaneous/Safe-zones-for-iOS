@@ -1,4 +1,4 @@
-# Safe zones for iOS
+# Safe Zones for iOS
 
 Adds space for the notch/island on iOS
 

@@ -20,7 +20,8 @@ std::vector<std::string> g_exclusionsClass = {
 	"EventsPush",
 	"RecordLayer",
 	"LoadMacroLayer",
-	"ModPopup"
+	"ModPopup",
+	"ModSettingsPopup"
 };
 
 void manualOffset(CCNode* node, float offset) {
@@ -421,9 +422,9 @@ $execute {
 	Loader::get()->queueInMainThread([]{
 		CCSize winSize = CCDirector::get()->getWinSize();
 
-		if (winSize.width > 569) {
+		//if (winSize.width > 569) {
 			g_doSafeArea = true;
 			CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
-		}
+		//}
 	});
 }
