@@ -7,10 +7,7 @@ using namespace geode::prelude;
 bool g_doSafeArea = false;
 
 std::vector<std::string> g_exclusions = {
-	"MenuLayer",
-	"LevelEditorLayer",
-	"DailyLevelPage",
-	"SecretRewardsLayer"
+
 };
 
 std::vector<std::string> g_exclusionsClass = {
@@ -21,7 +18,13 @@ std::vector<std::string> g_exclusionsClass = {
 	"RecordLayer",
 	"LoadMacroLayer",
 	"ModPopup",
-	"ModSettingsPopup"
+	"ModSettingsPopup",
+	"RewardsPage",
+	"MenuLayer",
+	"LevelEditorLayer",
+	"DailyLevelPage",
+	"SecretRewardsLayer",
+	"FLAlertLayer"
 };
 
 void manualOffset(CCNode* node, float offset) {
@@ -81,9 +84,11 @@ void modifyButtons(CCNode* node) {
 				continue;
 			}
 			if (CCMenu* menu = typeinfo_cast<CCMenu*>(child)) {
-				if (Layout* layout = menu->getLayout(); !typeinfo_cast<AnchorLayout*>(layout)) {
-					checkPosition(child);
-					continue;
+				if (Layout* layout = menu->getLayout()) {
+					if (!typeinfo_cast<AnchorLayout*>(layout)) {
+						checkPosition(child);
+						continue;
+					}
 				}
 			}
 			if (typeinfo_cast<CCMenuItem*>(child)) {
@@ -422,9 +427,9 @@ $execute {
 	Loader::get()->queueInMainThread([]{
 		CCSize winSize = CCDirector::get()->getWinSize();
 
-		//if (winSize.width > 569) {
+		if (winSize.width > 569) {
 			g_doSafeArea = true;
 			CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
-		//}
+		}
 	});
 }

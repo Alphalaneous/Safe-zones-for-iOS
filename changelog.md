@@ -1,5 +1,8 @@
 # 1.0.4
 - Exclude ModSettingsPopup
+- Exclude RewardsPage
+- Exclude FLAlertLayer
+- Fix more AnchorLayout issues
 
 # 1.0.3
 - Fix AnchorLayout issue
