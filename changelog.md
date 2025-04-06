@@ -1,3 +1,6 @@
+# 1.0.5
+- Better Soggy Support
+
 # 1.0.4
 - Exclude ModSettingsPopup
 - Exclude RewardsPage

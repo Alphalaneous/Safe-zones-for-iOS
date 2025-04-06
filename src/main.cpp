@@ -240,9 +240,23 @@ class $nodeModify(LevelInfoLayer) {
 
     void modify() {
 		if (CCNode* node = getChildByID("garage-menu")) {
+			
+			float width = 0;
 			for (CCNode* btn : CCArrayExt<CCNode*>(node->getChildren())) {
-				manualOffset(btn, -30);
+				if (!node->getLayout()) {
+					manualOffset(btn, -30);
+				}
+				width += btn->getScaledContentWidth() + 5;
 			}
+			width -= 5;
+
+			node->setContentWidth(width);
+
+			if (node->getLayout()) {
+				manualOffset(node, -30);
+			}
+
+			node->updateLayout();
 		}
 
 		if (CCNode* node = getChildByID("other-menu")) {
@@ -427,9 +441,9 @@ $execute {
 	Loader::get()->queueInMainThread([]{
 		CCSize winSize = CCDirector::get()->getWinSize();
 
-		if (winSize.width > 569) {
+		//if (winSize.width > 569) {
 			g_doSafeArea = true;
 			CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
-		}
+		//}
 	});
 }
