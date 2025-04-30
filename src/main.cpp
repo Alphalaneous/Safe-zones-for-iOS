@@ -85,6 +85,10 @@ void modifyButtons(CCNode* node) {
 			if (std::find(g_exclusions.begin(), g_exclusions.end(), child->getID()) != g_exclusions.end()) continue;
 			if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), AlphaUtils::Cocos::getClassName(child)) != g_exclusionsClass.end()) continue;
 
+			if (typeinfo_cast<geode::MDPopup*>(child)) {
+				continue;
+			}
+			
 			if (std::string_view(child->getID()) == "level-count-label") {
 				checkPosition(child);
 				continue;

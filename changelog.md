@@ -1,5 +1,8 @@
+# 1.0.7
+- Manually exclude MDPopup
+
 # 1.0.6
-- Eclude a bunch of popups
+- Exclude a bunch of popups
 
 # 1.0.5
 - Better Soggy Support
