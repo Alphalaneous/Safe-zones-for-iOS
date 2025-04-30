@@ -1,3 +1,6 @@
+# 1.0.6
+- Eclude a bunch of popups
+
 # 1.0.5
 - Better Soggy Support
 

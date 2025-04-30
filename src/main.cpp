@@ -25,6 +25,12 @@ std::vector<std::string> g_exclusionsClass = {
 	"DailyLevelPage",
 	"SecretRewardsLayer",
 	"FLAlertLayer"
+	"geode::MDPopup",
+	"ConfirmUninstallPopup",
+	"FiltersPopup",
+	"SortPopup",
+	"ModListPopup",
+	"QuickPopup",
 };
 
 void manualOffset(CCNode* node, float offset) {
