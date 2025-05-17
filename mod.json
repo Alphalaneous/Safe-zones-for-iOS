@@ -6,21 +6,13 @@
 	},
 	"id": "alphalaneous.safe_zones_for_ios",
 	"name": "Safe Zones for iOS",
-	"version": "v1.0.7",
+	"version": "v1.0.8",
 	"developer": "Alphalaneous",
 	"description": "Pushes buttons away from the left and right edges",
-	"dependencies": [
-        {
-            "id": "geode.node-ids",
-            "version": ">=v1.15.0",
-            "importance": "required"
-        },
-		{
-            "id": "alphalaneous.alphas_geode_utils",
-            "version": ">=v1.0.5",
-            "importance": "required"
-        }
-    ],
+	"dependencies": {
+		"geode.node-ids": ">=v1.15.0",
+		"alphalaneous.alphas_geode_utils": ">=v1.0.5"
+	},
 	"links": {
         "homepage": "https://linktr.ee/Alphalaneous",
         "source": "https://github.com/Alphalaneous/Safe-zones-for-iOS",

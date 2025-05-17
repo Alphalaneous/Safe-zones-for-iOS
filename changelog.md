@@ -1,3 +1,6 @@
+# 1.0.8
+- Exclude Globed Popups
+
 # 1.0.7
 - Manually exclude MDPopup
 
