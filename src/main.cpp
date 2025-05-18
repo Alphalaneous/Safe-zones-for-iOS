@@ -38,9 +38,9 @@ std::vector<std::string> g_exclusionsClass = {
 	"PrivacySettingsPopup",
 	"CreateRoomPopup",
 	"AdminUserPopup",
+	"AdminSendNoticePopup",
 	"AdminPopup",
 	"AdminPunishUserPopup",
-	"AdminSendNoticePopup",
 	"AdminLoginPopup"
 };
 
