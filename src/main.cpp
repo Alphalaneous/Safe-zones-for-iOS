@@ -33,7 +33,12 @@ std::vector<std::string> g_exclusionsClass = {
 	"QuickPopup",
 	"DailyPopup",
 	"GlobedUserListPopup",
-	"GlobedNotificationPanel"
+	"GlobedNotificationPanel",
+	"GlobedUserActionsPopup",
+	"PrivacySettingsPopup",
+	"AdminUserPopup",
+	"AdminPopup",
+	"AdminPunishUserPopup"
 };
 
 void manualOffset(CCNode* node, float offset) {
