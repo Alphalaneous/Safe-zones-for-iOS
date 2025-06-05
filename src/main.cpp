@@ -486,7 +486,7 @@ $execute {
     Loader::get()->queueInMainThread([]{
         CCSize winSize = CCDirector::get()->getWinSize();
 
-        if (winSize.width > 569 || true) {
+        if (winSize.width > 569) {
             g_doSafeArea = true;
             CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
         }
