@@ -1,14 +1,14 @@
 {
-	"geode": "4.4.0",
+	"geode": "4.5.0",
 	"gd": {
 		"win": "2.2074",
 		"ios": "2.2074"
 	},
 	"id": "alphalaneous.safe_zones_for_ios",
 	"name": "Safe Zones for iOS",
-	"version": "v1.0.8",
+	"version": "v1.0.11",
 	"developer": "Alphalaneous",
-	"description": "Pushes buttons away from the left and right edges",
+	"description": "Moves buttons away from screen edges",
 	"dependencies": {
 		"geode.node-ids": ">=v1.15.0",
 		"alphalaneous.alphas_geode_utils": ">=v1.0.5"
