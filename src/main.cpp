@@ -34,6 +34,7 @@ std::vector<std::string> g_exclusionsClass = {
     "DailyPopup",
     "GlobedUserListPopup",
     "GlobedNotificationPanel",
+  	"GlobedLevelFilterPopup",
     "GlobedUserActionsPopup",
     "PrivacySettingsPopup",
     "CreateRoomPopup",
