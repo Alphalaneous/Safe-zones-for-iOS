@@ -24,7 +24,7 @@ std::vector<std::string> g_exclusionsClass = {
     "LevelEditorLayer",
     "DailyLevelPage",
     "SecretRewardsLayer",
-    "FLAlertLayer"
+    "FLAlertLayer",
     "geode::MDPopup",
     "ConfirmUninstallPopup",
     "FiltersPopup",
@@ -46,7 +46,9 @@ std::vector<std::string> g_exclusionsClass = {
     "SuperWorldSelectLayer",
     "GJShopLayer",
     "LevelLeaderboard",
-    "ModsLayer"
+    "ModsLayer",
+    "AndroidBall",
+    "AndroidUI"
 };
 
 void manualOffset(CCNode* node, float offset) {
