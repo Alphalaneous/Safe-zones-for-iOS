@@ -1,6 +1,7 @@
 # 1.0.12
 - Fix a minor bug
 - Fix QOLMod
+- New icon
 
 # 1.0.9-1.0.11
 - Bug fixes and exclusions
