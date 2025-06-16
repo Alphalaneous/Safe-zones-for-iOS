@@ -6,7 +6,7 @@
 	},
 	"id": "alphalaneous.safe_zones_for_ios",
 	"name": "Safe Zones for iOS",
-	"version": "v1.0.11",
+	"version": "v1.0.12",
 	"developer": "Alphalaneous",
 	"description": "Moves buttons away from screen edges",
 	"dependencies": {
