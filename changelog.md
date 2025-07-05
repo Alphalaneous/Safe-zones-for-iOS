@@ -1,3 +1,6 @@
+# 1.0.13
+- Jitless
+
 # 1.0.12
 - Fix a minor bug
 - Fix QOLMod
