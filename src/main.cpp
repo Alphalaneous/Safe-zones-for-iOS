@@ -173,6 +173,9 @@ class $nodeModify(ModsLayer) {
                 modifyButtons(node);
             }
         }
+        if (CCNode* node = getChildByID("page-menu")) {
+            manualOffset(node, -30);
+        }
     }
 };
 
@@ -390,6 +393,18 @@ class $nodeModify(EditorUI) {
         if (CCNode* node = getChildByID("settings-menu")) {
             checkPosition(node);
         }
+
+        if (CCNode* node = getChildByID("object-info-label")) {
+            manualOffset(node, 30);
+        }
+
+        if (CCNode* node = getChildByID("alphalaneous.length_in_editor/length-container")) {
+            manualOffset(node, 30);
+        }
+
+        if (CCNode* node = getChildByID("razoom.named_editor_layers/menu")) {
+            manualOffset(node, -30);
+        }
     }
 };
 
@@ -489,6 +504,10 @@ $execute {
     Loader::get()->queueInMainThread([]{
         CCSize winSize = CCDirector::get()->getWinSize();
 
+        #ifdef GEODE_IS_WINDOWS
+            g_doSafeArea = true;
+            CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
+        #endif
         if (winSize.width > 569) {
             g_doSafeArea = true;
             CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);

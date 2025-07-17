@@ -1,3 +1,6 @@
+# 1.0.14
+- Fix positioning of some editor nodes
+
 # 1.0.13
 - Jitless
 
