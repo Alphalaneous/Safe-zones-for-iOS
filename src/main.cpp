@@ -101,7 +101,7 @@ void modifyButtons(CCNode* node) {
             child->setUserObject("checked"_spr, CCBool::create(true));
             
             if (std::find(g_exclusions.begin(), g_exclusions.end(), child->getID()) != g_exclusions.end()) continue;
-            if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), typeid(*child).name()) != g_exclusionsClass.end()) continue;
+            if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), geode::cocos::getObjectName(child)) != g_exclusionsClass.end()) continue;
 
             if (typeinfo_cast<geode::MDPopup*>(child)) {
                 continue;
