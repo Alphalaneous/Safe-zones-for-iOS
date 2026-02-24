@@ -1,3 +1,6 @@
+# 1.1.0
+- 2.2081 Support
+
 # 1.0.14
 - Fix positioning of some editor nodes
 

@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
-#include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
-#include <alphalaneous.alphas_geode_utils/include/Utils.h>
+#include <alphalaneous.alphas_geode_utils/include/ObjectModify.hpp>
+#include <alphalaneous.alphas_geode_utils/include/Utils.hpp>
 
 using namespace geode::prelude;
 
@@ -101,7 +101,7 @@ void modifyButtons(CCNode* node) {
             child->setUserObject("checked"_spr, CCBool::create(true));
             
             if (std::find(g_exclusions.begin(), g_exclusions.end(), child->getID()) != g_exclusions.end()) continue;
-            if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), AlphaUtils::Cocos::getClassName(child)) != g_exclusionsClass.end()) continue;
+            if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), geode::cocos::getObjectName(child)) != g_exclusionsClass.end()) continue;
 
             if (typeinfo_cast<geode::MDPopup*>(child)) {
                 continue;
@@ -147,7 +147,7 @@ public:
     void update(float dt) {
         auto scene = CCDirector::sharedDirector()->getRunningScene();
         if (CCTransitionScene* trans = typeinfo_cast<CCTransitionScene*>(scene)) {
-            scene = public_cast(trans, m_pInScene);
+            scene = trans->m_pInScene;
         }
         if (scene != m_currentScene) {
             m_currentScene = scene;
