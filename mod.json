@@ -1,6 +1,7 @@
 {
 	"geode": "5.6.0",
 	"gd": {
+		"win": "2.2081",
 		"ios": "2.2081"
 	},
 	"id": "alphalaneous.safe_zones_for_ios",

@@ -1,6 +1,6 @@
 #include <Geode/Geode.hpp>
-#include <alphalaneous.alphas_geode_utils/include/NodeModding.h>
-#include <alphalaneous.alphas_geode_utils/include/Utils.h>
+#include <alphalaneous.alphas_geode_utils/include/ObjectModify.hpp>
+#include <alphalaneous.alphas_geode_utils/include/Utils.hpp>
 
 using namespace geode::prelude;
 
@@ -53,22 +53,28 @@ std::vector<std::string> g_exclusionsClass = {
 
 void manualOffset(CCNode* node, float offset) {
     if (!node || !node->getParent() || !g_doSafeArea) return;
-    CCPoint worldPosition = node->convertToWorldSpaceAR({0, 0});
+    auto worldPosition = node->convertToWorldSpaceAR({0, 0});
     worldPosition.x += offset;
-    CCPoint newNodePos = node->getParent()->convertToNodeSpace(worldPosition);
+    auto newNodePos = node->getParent()->convertToNodeSpace(worldPosition);
     newNodePos.y = node->getPositionY();
 
     node->setPosition(newNodePos);
 }
 
+void manualOffsetIfExists(CCNode* node, std::string_view id, float offset) {
+    if (auto child = node->getChildByID(id)) {
+        manualOffset(child, offset);
+    }
+}
+
 void checkPosition(CCNode* node) {
     if (!node || !node->getParent() || utils::string::contains(node->getParent()->getID(), "-navigation-menu") || !g_doSafeArea) return;
 
-    CCPoint worldPosition = node->convertToWorldSpaceAR({0, 0});
-    CCSize winSize = CCDirector::sharedDirector()->getWinSize();
+    auto worldPosition = node->convertToWorldSpaceAR({0, 0});
+    auto winSize = CCDirector::get()->getWinSize();
 
     float scaledWidth = node->getContentSize().width * node->getScaleX();
-    CCPoint anchor = node->getAnchorPoint();
+    auto anchor = node->getAnchorPoint();
 
     float leftEdge = worldPosition.x - (scaledWidth * anchor.x);
     float rightEdge = worldPosition.x + (scaledWidth * (1.0f - anchor.x));
@@ -77,7 +83,7 @@ void checkPosition(CCNode* node) {
     float distanceFromRight = winSize.width - rightEdge;  
     bool isCloserToLeft = (distanceFromLeft < distanceFromRight);
 
-    CCPoint adjustedWorldPos = worldPosition;
+    auto adjustedWorldPos = worldPosition;
 
     if (isCloserToLeft) {
         if (leftEdge < 40) {
@@ -89,30 +95,36 @@ void checkPosition(CCNode* node) {
         }
     }
 
-    CCPoint newNodePos = node->getParent()->convertToNodeSpace(adjustedWorldPos);
+    auto newNodePos = node->getParent()->convertToNodeSpace(adjustedWorldPos);
     newNodePos.y = node->getPositionY();
 
     node->setPosition(newNodePos);
 }
 
+void checkPositionIfExists(CCNode* node, std::string_view id) {
+    if (auto child = node->getChildByID(id)) {
+        checkPosition(child);
+    }
+}
+
 void modifyButtons(CCNode* node) {
-    for (CCNode* child : CCArrayExt<CCNode*>(node->getChildren())) {
-        if (!child->getUserObject("checked"_spr)) {
-            child->setUserObject("checked"_spr, CCBool::create(true));
+    for (auto child : node->getChildrenExt()) {
+        if (!child->getUserFlag("checked"_spr)) {
+            child->setUserFlag("checked"_spr);
             
             if (std::find(g_exclusions.begin(), g_exclusions.end(), child->getID()) != g_exclusions.end()) continue;
-            if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), AlphaUtils::Cocos::getClassName(child)) != g_exclusionsClass.end()) continue;
+            if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), geode::cocos::getObjectName(child)) != g_exclusionsClass.end()) continue;
 
             if (typeinfo_cast<geode::MDPopup*>(child)) {
                 continue;
             }
             
-            if (std::string_view(child->getID()) == "level-count-label") {
+            if (child->getID() == "level-count-label") {
                 checkPosition(child);
                 continue;
             }
-            if (CCMenu* menu = typeinfo_cast<CCMenu*>(child)) {
-                if (Layout* layout = menu->getLayout()) {
+            if (auto menu = typeinfo_cast<CCMenu*>(child)) {
+                if (auto layout = menu->getLayout()) {
                     if (!typeinfo_cast<AnchorLayout*>(layout)) {
                         checkPosition(child);
                         continue;
@@ -129,7 +141,6 @@ void modifyButtons(CCNode* node) {
     }
 }
 
-
 class SceneHandler : public CCNode {
 public:
     static SceneHandler* create() {
@@ -145,9 +156,9 @@ public:
     }
 
     void update(float dt) {
-        auto scene = CCDirector::sharedDirector()->getRunningScene();
-        if (CCTransitionScene* trans = typeinfo_cast<CCTransitionScene*>(scene)) {
-            scene = public_cast(trans, m_pInScene);
+        auto scene = CCDirector::get()->getRunningScene();
+        if (auto trans = typeinfo_cast<CCTransitionScene*>(scene)) {
+            scene = trans->m_pInScene;
         }
         if (scene != m_currentScene) {
             m_currentScene = scene;
@@ -158,7 +169,7 @@ public:
 
 class $nodeModify(GJShopLayer) {
     void modify() {
-        for (CCNode* node : CCArrayExt<CCNode*>(getChildren())) {
+        for (auto node : getChildrenExt()) {
             if (typeinfo_cast<CCMenu*>(node)) {
                 modifyButtons(node);
             }
@@ -168,14 +179,12 @@ class $nodeModify(GJShopLayer) {
 
 class $nodeModify(ModsLayer) {
     void modify() {
-        for (CCNode* node : CCArrayExt<CCNode*>(getChildren())) {
+        for (auto node : getChildrenExt()) {
             if (typeinfo_cast<CCMenu*>(node)) {
                 modifyButtons(node);
             }
         }
-        if (CCNode* node = getChildByID("page-menu")) {
-            manualOffset(node, -30);
-        }
+        manualOffsetIfExists(this, "page-menu", -30);
     }
 };
 
@@ -211,78 +220,34 @@ class $nodeModify(MoreOptionsLayer) {
 
 class $nodeModify(GJGarageLayer) {
     void modify() {
-        if (CCNode* node = getChildByID("stars-label")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("stars-icon")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("moons-label")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("moons-icon")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("coins-label")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("coins-icon")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("user-coins-label")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("user-coins-icon")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("orbs-label")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("orbs-icon")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("diamonds-label")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("diamonds-icon")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("diamond-shards-label")) {
-            manualOffset(node, -30);
-        }
-        if (CCNode* node = getChildByID("diamond-shards-icon")) {
-            manualOffset(node, -30);
-        }
+        manualOffsetIfExists(this, "stars-label", -30);
+        manualOffsetIfExists(this, "stars-icon", -30);
+        manualOffsetIfExists(this, "moons-label", -30);
+        manualOffsetIfExists(this, "moons-icon", -30);
+        manualOffsetIfExists(this, "coins-label", -30);
+        manualOffsetIfExists(this, "coins-icon", -30);
+        manualOffsetIfExists(this, "user-coins-label", -30);
+        manualOffsetIfExists(this, "user-coins-icon", -30);
+        manualOffsetIfExists(this, "orbs-label", -30);
+        manualOffsetIfExists(this, "orbs-icon", -30);
+        manualOffsetIfExists(this, "diamonds-label", -30);
+        manualOffsetIfExists(this, "diamonds-icon", -30);
+        manualOffsetIfExists(this, "diamond-shards-label", -30);
+        manualOffsetIfExists(this, "diamond-shards-icon", -30);
     }
 };
 
 class $nodeModify(GauntletSelectLayer) {
 
     void modify() {
+        checkPositionIfExists(this, "back-menu");
+        checkPositionIfExists(this, "bottom-left-menu");
+        checkPositionIfExists(this, "bottom-right-menu");
+        checkPositionIfExists(this, "top-right-menu");
 
-        if (CCNode* node = getChildByID("back-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("bottom-left-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("bottom-right-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("top-right-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("scroll-buttons-menu")) {
-            if (CCNode* btn = node->getChildByID("left-button")) {
-                checkPosition(btn);
-            }
-            if (CCNode* btn = node->getChildByID("right-button")) {
-                checkPosition(btn);
-            }
+        if (auto node = getChildByID("scroll-buttons-menu")) {
+            checkPositionIfExists(node, "left-button");
+            checkPositionIfExists(node, "right-button");
         }
     }
 };
@@ -290,10 +255,10 @@ class $nodeModify(GauntletSelectLayer) {
 class $nodeModify(LevelInfoLayer) {
 
     void modify() {
-        if (CCNode* node = getChildByID("garage-menu")) {
+        if (auto node = getChildByID("garage-menu")) {
             
             float width = 0;
-            for (CCNode* btn : CCArrayExt<CCNode*>(node->getChildren())) {
+            for (auto btn : node->getChildrenExt()) {
                 if (!node->getLayout()) {
                     manualOffset(btn, -30);
                 }
@@ -310,124 +275,74 @@ class $nodeModify(LevelInfoLayer) {
             node->updateLayout();
         }
 
-        if (CCNode* node = getChildByID("other-menu")) {
-            if (CCNode* node2 = node->getChildByID("favorite-button")) {
-                manualOffset(node2, 30);
-            }
-            if (CCNode* node2 = node->getChildByID("move-up-button")) {
-                manualOffset(node2, -30);
-            }
-            if (CCNode* node2 = node->getChildByID("move-down-button")) {
-                manualOffset(node2, -30);
-            }
-            if (CCNode* node2 = node->getChildByID("folder-button")) {
-                manualOffset(node2, -30);
-            }
-            if (CCNode* node2 = node->getChildByID("list-button")) {
-                manualOffset(node2, -30);
-            }
+        if (auto node = getChildByID("other-menu")) {
+            manualOffsetIfExists(this, "favorite-button", 30);
+            manualOffsetIfExists(this, "move-up-button", -30);
+            manualOffsetIfExists(this, "move-down-button", -30);
+            manualOffsetIfExists(this, "folder-button", -30);
+            manualOffsetIfExists(this, "list-button", -30);
         }
 
-        if (CCNode* node = getChildByID("actions-menu")) {
-            checkPosition(node);
-        }
+        checkPositionIfExists(this, "actions-menu");
     }
 };
 
 class $nodeModify(EditorPauseLayer) {
 
     void modify() {
-        if (CCNode* node = getChildByID("small-actions-menu")) {
+        checkPositionIfExists(this, "actions-menu");
+        checkPositionIfExists(this, "options-menu");
+        checkPositionIfExists(this, "info-menu");
+
+        if (auto node = getChildByID("small-actions-menu")) {
             manualOffset(node, -15);
         }
 
-        if (CCNode* node = getChildByID("actions-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("options-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("settings-menu")) {
+        if (auto node = getChildByID("settings-menu")) {
             manualOffset(node, -18);
         }
 
-        if (CCNode* node = getChildByID("info-menu")) {
-            checkPosition(node);
-        }
     }
 };
 
 class $nodeModify(EditorUI) {
 
     void modify() {
-        if (CCNode* node = getChildByID("zoom-menu")) {
-            checkPosition(node);
-        }
+        checkPositionIfExists(this, "zoom-menu");
+        checkPositionIfExists(this, "playback-menu");
+        checkPositionIfExists(this, "playtest-menu");
+        checkPositionIfExists(this, "editor-buttons-menu");
+        checkPositionIfExists(this, "layer-menu");
+        checkPositionIfExists(this, "undo-menu");
+        checkPositionIfExists(this, "settings-menu");
 
-        if (CCNode* node = getChildByID("link-menu")) {
-            manualOffset(node, 30);
-        }
-
-        if (CCNode* node = getChildByID("playback-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("playtest-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("editor-buttons-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("layer-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("undo-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("settings-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("object-info-label")) {
-            manualOffset(node, 30);
-        }
-
-        if (CCNode* node = getChildByID("alphalaneous.length_in_editor/length-container")) {
-            manualOffset(node, 30);
-        }
-
-        if (CCNode* node = getChildByID("razoom.named_editor_layers/menu")) {
-            manualOffset(node, -30);
-        }
+        manualOffsetIfExists(this, "link-menu", 30);
+        manualOffsetIfExists(this, "object-info-label", 30);
+        manualOffsetIfExists(this, "alphalaneous.tinker/length-container", 30);
+        manualOffsetIfExists(this, "razoom.named_editor_layers/menu", -30);
     }
 };
 
 class $nodeModify(LevelSelectLayer) {
 
     void modify() {
-        if (CCNode* node = getChildByID("info-menu")) {
-            for (CCNode* btn : CCArrayExt<CCNode*>(node->getChildren())) {
+        if (auto node = getChildByID("info-menu")) {
+            for (auto btn : node->getChildrenExt()) {
                 checkPosition(btn);
             }
         }
 
-        if (CCNode* node = getChildByID("back-menu")) {
-            if (CCNode* btn = node->getChildByID("back-button")) {
+        if (auto node = getChildByID("back-menu")) {
+            if (auto btn = node->getChildByID("back-button")) {
                 checkPosition(btn);
             }
         }
 
-        if (CCNode* node = getChildByID("arrows-menu")) {
-            if (CCNode* btn = node->getChildByID("left-button")) {
+        if (auto node = getChildByID("arrows-menu")) {
+            if (auto btn = node->getChildByID("left-button")) {
                 checkPosition(btn);
             }
-            if (CCNode* btn = node->getChildByID("right-button")) {
+            if (auto btn = node->getChildByID("right-button")) {
                 checkPosition(btn);
             }
         }
@@ -437,17 +352,17 @@ class $nodeModify(LevelSelectLayer) {
 class $nodeModify(SecretRewardsLayer) {
 
     void modify() {
-        if (CCNode* node = getChildByID("exit-menu")) {
-            if (CCNode* btn = node->getChildByType<CCMenuItemSpriteExtra*>(0)) {
+        if (auto node = getChildByID("exit-menu")) {
+            if (auto btn = node->getChildByType<CCMenuItemSpriteExtra*>(0)) {
                 checkPosition(btn);
             }
         }
 
-        if (CCNode* node = getChildByID("page-navigation")) {
-            if (CCNode* btn = node->getChildByID("left")) {
+        if (auto node = getChildByID("page-navigation")) {
+            if (auto btn = node->getChildByID("left")) {
                 checkPosition(btn);
             }
-            if (CCNode* btn = node->getChildByID("right")) {
+            if (auto btn = node->getChildByID("right")) {
                 checkPosition(btn);
             }
         }
@@ -457,50 +372,28 @@ class $nodeModify(SecretRewardsLayer) {
 class $nodeModify(MenuLayer) {
 
     void modify() {
-        if (CCNode* node = getChildByID("profile-menu")) {
-            checkPosition(node);
-        }
+        checkPositionIfExists(this, "profile-menu");
+        checkPositionIfExists(this, "right-side-menu");
+        checkPositionIfExists(this, "profile-button");
+        checkPositionIfExists(this, "social-media-menu");
+        checkPositionIfExists(this, "more-games-menu");
+        checkPositionIfExists(this, "top-right-menu");
+        checkPositionIfExists(this, "side-menu");
+        checkPositionIfExists(this, "close-menu");
 
-        if (CCNode* node = getChildByID("right-side-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("profile-button")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("social-media-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("more-games-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("player-username")) {
-            if (CCNode* profile = getChildByID("profile-menu")) {
-                if (CCNode* profileButton = profile->getChildByID("profile-button")) {
-                    CCPoint world = profileButton->convertToWorldSpaceAR({0, 0});
+        if (auto node = getChildByID("player-username")) {
+            if (auto profile = getChildByID("profile-menu")) {
+                if (auto profileButton = profile->getChildByID("profile-button")) {
+                    auto world = profileButton->convertToWorldSpaceAR({0, 0});
                     node->setPositionX(world.x);
                 }
             }
         }
 
-        if (CCNode* node = getChildByID("top-right-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("side-menu")) {
-            checkPosition(node);
-        }
-
-        if (CCNode* node = getChildByID("close-menu")) {
-            checkPosition(node);
-        }
     }
 };
     
-$execute {
+$on_mod(Loaded) {
     Loader::get()->queueInMainThread([]{
         CCSize winSize = CCDirector::get()->getWinSize();
 
