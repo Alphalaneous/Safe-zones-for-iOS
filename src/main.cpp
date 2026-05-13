@@ -417,7 +417,7 @@ $on_mod(Loaded) {
 class $modify(MyAppDelegate, AppDelegate) {
     static AppDelegate* get() {
         auto ret = AppDelegate::get();
-        ret->m_unk0e9 = true;
+        ret->m_unk0ed = true;
         return ret;
     }
 };
