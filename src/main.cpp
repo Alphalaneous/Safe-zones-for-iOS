@@ -1,5 +1,4 @@
 #include <Geode/Geode.hpp>
-#include <Geode/binding/AppDelegate.hpp>
 #include <alphalaneous.alphas_geode_utils/include/ObjectModify.hpp>
 #include <alphalaneous.alphas_geode_utils/include/Utils.hpp>
 
@@ -415,8 +414,6 @@ $on_mod(Loaded) {
 class $modify(MyAppDelegate, AppDelegate) {
     void setupGLView() {
         AppDelegate::setupGLView();
-        m_unk0ed = CCEGLView::get()->getFrameSize().aspect() == (19.5f / 9.f);
-        log::info("m_unk0ed: {}", m_unk0ed);
-        log::info("aspect: {} actual: {}", (19.5f / 9.f), CCEGLView::get()->getFrameSize().aspect());
+        m_unk0ed = geode::utils::getSafeAreaRect().size != CCDirector::get()->getWinSize();
     }
 };
