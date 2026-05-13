@@ -410,11 +410,6 @@ $on_mod(Loaded) {
 }*/
 
 
-#include <Geode/modify/AppDelegate.hpp>
-
-class $modify(MyAppDelegate, AppDelegate) {
-    void setupGLView() {
-        AppDelegate::setupGLView();
-        m_unk0ed = CCEGLView::get()->getFrameSize().aspect() == (19.5f / 9.f);
-    }
-};
+$on_mod(Loaded) {
+    AppDelegate::get()->m_unk0ed = CCEGLView::get()->getFrameSize().aspect() == (19.5f / 9.f);
+}
