@@ -1,4 +1,5 @@
 #include "Geode/cocos/CCDirector.h"
+#include "Geode/cocos/platform/win32/CCEGLView.h"
 #include "Geode/loader/Log.hpp"
 #include <Geode/Geode.hpp>
 #include <Geode/binding/AppDelegate.hpp>
@@ -418,7 +419,7 @@ class $modify(MyAppDelegate, AppDelegate) {
     static AppDelegate* get() {
         auto ret = AppDelegate::get();
         ret->m_unk0ed = true;
-        log::info("size: {}", CCDirector::get()->getWinSizeInPixels());
+        log::info("size: {}", CCEGLView::get()->getDesignResolutionSize());
         return ret;
     }
 };
