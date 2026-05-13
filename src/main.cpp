@@ -1,8 +1,4 @@
-#include "Geode/cocos/CCDirector.h"
-#include "Geode/cocos/platform/win32/CCEGLView.h"
-#include "Geode/loader/Log.hpp"
 #include <Geode/Geode.hpp>
-#include <Geode/binding/AppDelegate.hpp>
 #include <alphalaneous.alphas_geode_utils/include/ObjectModify.hpp>
 #include <alphalaneous.alphas_geode_utils/include/Utils.hpp>
 
