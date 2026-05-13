@@ -1,10 +1,13 @@
+#include "Geode/cocos/CCDirector.h"
+#include "Geode/loader/Log.hpp"
 #include <Geode/Geode.hpp>
+#include <Geode/binding/AppDelegate.hpp>
 #include <alphalaneous.alphas_geode_utils/include/ObjectModify.hpp>
 #include <alphalaneous.alphas_geode_utils/include/Utils.hpp>
 
 using namespace geode::prelude;
 
-bool g_doSafeArea = false;
+/*bool g_doSafeArea = false;
 
 std::vector<std::string> g_exclusions = {
 
@@ -406,4 +409,19 @@ $on_mod(Loaded) {
             CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
         }
     });
-}
+}*/
+
+
+#include <Geode/modify/AppDelegate.hpp>
+
+class $modify(MyAppDelegate, AppDelegate) {
+    void setupGLView() {
+        AppDelegate::setupGLView();
+        m_unk0ed = true;
+        m_unk0ec = true;
+        m_unk0eb = true;
+        m_ios = true;
+        m_unk0e9 = true;
+    }
+
+};

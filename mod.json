@@ -10,7 +10,6 @@
 	"developer": "Alphalaneous",
 	"description": "Moves buttons away from screen edges",
 	"dependencies": {
-		"geode.node-ids": ">=v1.15.0",
 		"alphalaneous.alphas_geode_utils": ">=v1.2.5"
 	},
 	"links": {
