@@ -418,6 +418,7 @@ class $modify(MyAppDelegate, AppDelegate) {
     static AppDelegate* get() {
         auto ret = AppDelegate::get();
         ret->m_unk0ed = true;
+        log::info("size: {}", CCDirector::get()->getWinSizeInPixels());
         return ret;
     }
 };
