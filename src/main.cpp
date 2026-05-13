@@ -415,6 +415,6 @@ $on_mod(Loaded) {
 class $modify(MyAppDelegate, AppDelegate) {
     void setupGLView() {
         AppDelegate::setupGLView();
-        m_unk0ed = CCEGLView::get()->getFrameSize().aspect() == (19.5 / 9);
+        m_unk0ed = CCEGLView::get()->getFrameSize().aspect() == (19.5f / 9.f);
     }
 };

@@ -19,5 +19,6 @@
     },
 	"tags": [
 		"bugfix", "interface"
-	]
+	],
+	"early-load": true
 }
