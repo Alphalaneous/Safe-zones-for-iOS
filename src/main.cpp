@@ -416,6 +416,7 @@ class $modify(MyAppDelegate, AppDelegate) {
     void setupGLView() {
         AppDelegate::setupGLView();
         m_unk0ed = CCEGLView::get()->getFrameSize().aspect() == (19.5f / 9.f);
-        log::info("setup GL view");
+        log::info("m_unk0ed: {}", m_unk0ed);
+        log::info("aspect: {} actual: {}", (19.5f / 9.f), CCEGLView::get()->getFrameSize().aspect());
     }
 };
