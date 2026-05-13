@@ -415,13 +415,14 @@ $on_mod(Loaded) {
 #include <Geode/modify/AppDelegate.hpp>
 
 class $modify(MyAppDelegate, AppDelegate) {
-    void setupGLView() {
-        AppDelegate::setupGLView();
-        m_unk0ed = true;
-        m_unk0ec = true;
-        m_unk0eb = true;
-        m_ios = true;
-        m_unk0e9 = true;
-    }
+    static AppDelegate* get() {
+        auto ret = AppDelegate::get();
+        ret->m_unk0ed = true;
+        ret->m_unk0ec = true;
+        ret->m_unk0eb = true;
+        ret->m_ios = true;
+        ret->m_unk0e9 = true;
 
+        return ret;
+    }
 };
