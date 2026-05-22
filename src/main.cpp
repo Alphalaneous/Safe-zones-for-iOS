@@ -1,10 +1,11 @@
 #include <Geode/Geode.hpp>
+#include <Geode/ui/Button.hpp>
 #include <alphalaneous.alphas_geode_utils/include/ObjectModify.hpp>
 #include <alphalaneous.alphas_geode_utils/include/Utils.hpp>
 
 using namespace geode::prelude;
 
-/*bool g_doSafeArea = false;
+bool g_doSafeArea = true;
 
 std::vector<std::string> g_exclusions = {
 
@@ -72,6 +73,9 @@ void checkPosition(CCNode* node) {
 
     auto worldPosition = node->convertToWorldSpaceAR({0, 0});
     auto winSize = CCDirector::get()->getWinSize();
+    if (node->getScaledContentWidth() >= winSize.width - 80) {
+        return;
+    }
 
     float scaledWidth = node->getContentSize().width * node->getScaleX();
     auto anchor = node->getAnchorPoint();
@@ -135,35 +139,22 @@ void modifyButtons(CCNode* node) {
                 checkPosition(child);
                 continue;
             }
+            if (typeinfo_cast<geode::Button*>(child)) {
+                checkPosition(child);
+                continue;
+            }
 
             modifyButtons(child);
         }
     }
 }
 
-class SceneHandler : public CCNode {
-public:
-    static SceneHandler* create() {
-        auto ret = new SceneHandler();
-        ret->autorelease();
-        return ret;
-    }
-
-    CCScene* m_currentScene = nullptr;
-    
-    void checkForChildrenChange(float dt) {
-        modifyButtons(this);
-    }
-
-    void update(float dt) {
-        auto scene = CCDirector::get()->getRunningScene();
-        if (auto trans = typeinfo_cast<CCTransitionScene*>(scene)) {
-            scene = trans->m_pInScene;
-        }
-        if (scene != m_currentScene) {
-            m_currentScene = scene;
-            m_currentScene->schedule(schedule_selector(SceneHandler::checkForChildrenChange));
-        }
+class $classModify(CCScene) {
+    void modify() {
+        addOnEnterCallback([this] {
+            auto firstChild = getChildByIndex(0);
+            modifyButtons(firstChild);
+        });
     }
 };
 
@@ -316,9 +307,8 @@ class $nodeModify(EditorUI) {
         checkPositionIfExists(this, "undo-menu");
         checkPositionIfExists(this, "settings-menu");
 
-        manualOffsetIfExists(this, "link-menu", 30);
-        manualOffsetIfExists(this, "object-info-label", 30);
-        manualOffsetIfExists(this, "alphalaneous.tinker/length-container", 30);
+        checkPositionIfExists(this, "build-tabs-menu");
+
         manualOffsetIfExists(this, "razoom.named_editor_layers/menu", -30);
     }
 };
@@ -392,28 +382,11 @@ class $nodeModify(MenuLayer) {
 
     }
 };
-    
-$on_mod(Loaded) {
-    Loader::get()->queueInMainThread([]{
-        CCSize winSize = CCDirector::get()->getWinSize();
-
-        #ifdef GEODE_IS_WINDOWS
-            g_doSafeArea = true;
-            CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
-        #endif
-        if (winSize.width > 569) {
-            g_doSafeArea = true;
-            CCScheduler::get()->scheduleUpdateForTarget(SceneHandler::create(), INT_MAX, false);
-        }
-    });
-}*/
-
 
 #include <Geode/modify/AppDelegate.hpp>
-
-class $modify(MyAppDelegate, AppDelegate) {
+class $modify(FixSafeAreaAppDelegate, AppDelegate) {
     void setupGLView() {
         AppDelegate::setupGLView();
-        m_unk0ed = geode::utils::getSafeAreaRect().size != CCDirector::get()->getWinSize();
+        m_needsSafeArea = geode::utils::getSafeAreaRect().size != CCDirector::get()->getWinSize();
     }
 };
