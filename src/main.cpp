@@ -180,6 +180,15 @@ class $nodeModify(GJGarageLayer) {
     }
 };
 
+class $nodeModify(EditorPauseLayer) {
+
+    void modify() {
+        checkPositionIfExists(this, "actions-menu");
+        checkPositionIfExists(this, "options-menu");
+        checkPositionIfExists(this, "info-menu");
+    }
+};
+
 class $nodeModify(LevelInfoLayer) {
 
     void modify() {
@@ -225,6 +234,9 @@ class $nodeModify(EditorUI) {
         checkPositionIfExists(this, "layer-menu");
         checkPositionIfExists(this, "undo-menu");
         checkPositionIfExists(this, "settings-menu");
+
+        checkPositionIfExists(this, "toolbar-categories-menu");
+        checkPositionIfExists(this, "toolbar-toggles-menu");
 
         checkPositionIfExists(this, "build-tabs-menu");
 
