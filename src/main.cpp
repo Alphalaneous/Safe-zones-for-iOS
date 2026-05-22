@@ -200,8 +200,10 @@ class $nodeModify(EditorUI) {
         checkPositionIfExists(this, "undo-menu");
         checkPositionIfExists(this, "settings-menu");
 
-        checkPositionIfExists(this, "toolbar-categories-menu");
-        checkPositionIfExists(this, "toolbar-toggles-menu");
+        if (!Loader::get()->isModLoaded("alphalaneous.tinker")) {
+            checkPositionIfExists(this, "toolbar-categories-menu");
+            checkPositionIfExists(this, "toolbar-toggles-menu");
+        }
 
         checkPositionIfExists(this, "build-tabs-menu");
 
