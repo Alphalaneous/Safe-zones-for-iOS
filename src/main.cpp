@@ -71,9 +71,11 @@ void manualOffsetIfExists(CCNode* node, std::string_view id, float offset) {
 void checkPosition(CCNode* node) {
     if (!node || !node->getParent() || utils::string::contains(node->getParent()->getID(), "-navigation-menu") || !g_doSafeArea) return;
 
+    float offset = utils::getSafeAreaRect().getMinX() / 2;
+
     auto worldPosition = node->convertToWorldSpaceAR({0, 0});
     auto winSize = CCDirector::get()->getWinSize();
-    if (node->getScaledContentWidth() >= winSize.width - 80) {
+    if (node->getScaledContentWidth() >= winSize.width - offset * 2) {
         return;
     }
 
@@ -90,12 +92,12 @@ void checkPosition(CCNode* node) {
     auto adjustedWorldPos = worldPosition;
 
     if (isCloserToLeft) {
-        if (leftEdge < 40) {
-            adjustedWorldPos.x = 40 + (scaledWidth * anchor.x);
+        if (leftEdge < offset) {
+            adjustedWorldPos.x = offset + (scaledWidth * anchor.x);
         }
     } else {
-        if (rightEdge > winSize.width - 40) {
-            adjustedWorldPos.x = (winSize.width - 40) - (scaledWidth * (1.0f - anchor.x));
+        if (rightEdge > winSize.width - offset) {
+            adjustedWorldPos.x = (winSize.width - offset) - (scaledWidth * (1.0f - anchor.x));
         }
     }
 
