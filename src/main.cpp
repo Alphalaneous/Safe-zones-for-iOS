@@ -71,7 +71,7 @@ void manualOffsetIfExists(CCNode* node, std::string_view id, float offset) {
 void checkPosition(CCNode* node) {
     if (!node || !node->getParent() || utils::string::contains(node->getParent()->getID(), "-navigation-menu") || !g_doSafeArea) return;
 
-    float offset = 35.f;
+    float offset = 32.f;
 
     auto worldPosition = node->convertToWorldSpaceAR({0, 0});
     auto winSize = CCDirector::get()->getWinSize();
@@ -183,8 +183,8 @@ class $nodeModify(GJGarageLayer) {
 class $nodeModify(EditorPauseLayer) {
 
     void modify() {
-        manualOffsetIfExists(this, "options-menu", 40);
-        manualOffsetIfExists(this, "info-menu", 40);
+        manualOffsetIfExists(this, "options-menu", 36);
+        manualOffsetIfExists(this, "info-menu", 36);
         checkPositionIfExists(this, "actions-menu");
     }
 };
