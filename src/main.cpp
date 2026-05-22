@@ -155,59 +155,9 @@ class $classModify(CCScene) {
     void modify() {
         addOnEnterCallback([this] {
             auto firstChild = getChildByIndex(0);
+            if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), geode::cocos::getObjectName(firstChild)) != g_exclusionsClass.end()) return;
             modifyButtons(firstChild);
         });
-    }
-};
-
-class $nodeModify(GJShopLayer) {
-    void modify() {
-        for (auto node : getChildrenExt()) {
-            if (typeinfo_cast<CCMenu*>(node)) {
-                modifyButtons(node);
-            }
-        }
-    }
-};
-
-class $nodeModify(ModsLayer) {
-    void modify() {
-        for (auto node : getChildrenExt()) {
-            if (typeinfo_cast<CCMenu*>(node)) {
-                modifyButtons(node);
-            }
-        }
-        manualOffsetIfExists(this, "page-menu", -30);
-    }
-};
-
-class $nodeModify(AchievementsLayer) {
-    void modify() {
-        modifyButtons(this);
-    }
-};
-
-class $nodeModify(OptionsLayer) {
-    void modify() {
-        modifyButtons(this);
-    }
-};
-
-class $nodeModify(GJMoreGamesLayer) {
-    void modify() {
-        modifyButtons(this);
-    }
-};
-
-class $nodeModify(StatsLayer) {
-    void modify() {
-        modifyButtons(this);
-    }
-};
-
-class $nodeModify(MoreOptionsLayer) {
-    void modify() {
-        modifyButtons(this);
     }
 };
 
@@ -227,21 +177,6 @@ class $nodeModify(GJGarageLayer) {
         manualOffsetIfExists(this, "diamonds-icon", -30);
         manualOffsetIfExists(this, "diamond-shards-label", -30);
         manualOffsetIfExists(this, "diamond-shards-icon", -30);
-    }
-};
-
-class $nodeModify(GauntletSelectLayer) {
-
-    void modify() {
-        checkPositionIfExists(this, "back-menu");
-        checkPositionIfExists(this, "bottom-left-menu");
-        checkPositionIfExists(this, "bottom-right-menu");
-        checkPositionIfExists(this, "top-right-menu");
-
-        if (auto node = getChildByID("scroll-buttons-menu")) {
-            checkPositionIfExists(node, "left-button");
-            checkPositionIfExists(node, "right-button");
-        }
     }
 };
 
@@ -280,24 +215,6 @@ class $nodeModify(LevelInfoLayer) {
     }
 };
 
-class $nodeModify(EditorPauseLayer) {
-
-    void modify() {
-        checkPositionIfExists(this, "actions-menu");
-        checkPositionIfExists(this, "options-menu");
-        checkPositionIfExists(this, "info-menu");
-
-        if (auto node = getChildByID("small-actions-menu")) {
-            manualOffset(node, -15);
-        }
-
-        if (auto node = getChildByID("settings-menu")) {
-            manualOffset(node, -18);
-        }
-
-    }
-};
-
 class $nodeModify(EditorUI) {
 
     void modify() {
@@ -312,32 +229,7 @@ class $nodeModify(EditorUI) {
         checkPositionIfExists(this, "build-tabs-menu");
 
         manualOffsetIfExists(this, "razoom.named_editor_layers/menu", -30);
-    }
-};
-
-class $nodeModify(LevelSelectLayer) {
-
-    void modify() {
-        if (auto node = getChildByID("info-menu")) {
-            for (auto btn : node->getChildrenExt()) {
-                checkPosition(btn);
-            }
-        }
-
-        if (auto node = getChildByID("back-menu")) {
-            if (auto btn = node->getChildByID("back-button")) {
-                checkPosition(btn);
-            }
-        }
-
-        if (auto node = getChildByID("arrows-menu")) {
-            if (auto btn = node->getChildByID("left-button")) {
-                checkPosition(btn);
-            }
-            if (auto btn = node->getChildByID("right-button")) {
-                checkPosition(btn);
-            }
-        }
+        manualOffsetIfExists(this, "layer-menu", -7);
     }
 };
 
