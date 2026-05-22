@@ -203,11 +203,11 @@ class $nodeModify(EditorUI) {
         if (!Loader::get()->isModLoaded("alphalaneous.tinker")) {
             checkPositionIfExists(this, "toolbar-categories-menu");
             checkPositionIfExists(this, "toolbar-toggles-menu");
+            manualOffsetIfExists(this, "razoom.named_editor_layers/menu", -30);
         }
 
         checkPositionIfExists(this, "build-tabs-menu");
 
-        manualOffsetIfExists(this, "razoom.named_editor_layers/menu", -30);
         manualOffsetIfExists(this, "layer-menu", -7);
     }
 };
