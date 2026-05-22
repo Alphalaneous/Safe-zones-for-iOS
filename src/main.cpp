@@ -71,7 +71,7 @@ void manualOffsetIfExists(CCNode* node, std::string_view id, float offset) {
 void checkPosition(CCNode* node) {
     if (!node || !node->getParent() || utils::string::contains(node->getParent()->getID(), "-navigation-menu") || !g_doSafeArea) return;
 
-    float offset = utils::getSafeAreaRect().getMinX() / 2;
+    float offset = 35.f;
 
     auto worldPosition = node->convertToWorldSpaceAR({0, 0});
     auto winSize = CCDirector::get()->getWinSize();
@@ -183,43 +183,8 @@ class $nodeModify(GJGarageLayer) {
 class $nodeModify(EditorPauseLayer) {
 
     void modify() {
-        checkPositionIfExists(this, "actions-menu");
-        checkPositionIfExists(this, "options-menu");
-        checkPositionIfExists(this, "info-menu");
-    }
-};
-
-class $nodeModify(LevelInfoLayer) {
-
-    void modify() {
-        if (auto node = getChildByID("garage-menu")) {
-            
-            float width = 0;
-            for (auto btn : node->getChildrenExt()) {
-                if (!node->getLayout()) {
-                    manualOffset(btn, -30);
-                }
-                width += btn->getScaledContentWidth() + 5;
-            }
-            width -= 5;
-
-            node->setContentWidth(width);
-
-            if (node->getLayout()) {
-                manualOffset(node, -30);
-            }
-
-            node->updateLayout();
-        }
-
-        if (auto node = getChildByID("other-menu")) {
-            manualOffsetIfExists(this, "favorite-button", 30);
-            manualOffsetIfExists(this, "move-up-button", -30);
-            manualOffsetIfExists(this, "move-down-button", -30);
-            manualOffsetIfExists(this, "folder-button", -30);
-            manualOffsetIfExists(this, "list-button", -30);
-        }
-
+        manualOffsetIfExists(this, "options-menu", 40);
+        manualOffsetIfExists(this, "info-menu", 40);
         checkPositionIfExists(this, "actions-menu");
     }
 };
@@ -245,34 +210,12 @@ class $nodeModify(EditorUI) {
     }
 };
 
-class $nodeModify(SecretRewardsLayer) {
-
-    void modify() {
-        if (auto node = getChildByID("exit-menu")) {
-            if (auto btn = node->getChildByType<CCMenuItemSpriteExtra*>(0)) {
-                checkPosition(btn);
-            }
-        }
-
-        if (auto node = getChildByID("page-navigation")) {
-            if (auto btn = node->getChildByID("left")) {
-                checkPosition(btn);
-            }
-            if (auto btn = node->getChildByID("right")) {
-                checkPosition(btn);
-            }
-        }
-    }
-};
-
 class $nodeModify(MenuLayer) {
 
     void modify() {
         checkPositionIfExists(this, "profile-menu");
         checkPositionIfExists(this, "right-side-menu");
         checkPositionIfExists(this, "profile-button");
-        checkPositionIfExists(this, "social-media-menu");
-        checkPositionIfExists(this, "more-games-menu");
         checkPositionIfExists(this, "top-right-menu");
         checkPositionIfExists(this, "side-menu");
         checkPositionIfExists(this, "close-menu");
