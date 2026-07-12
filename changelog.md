@@ -1,3 +1,6 @@
+# 1.0.17
+- Fix a crash
+
 # 1.0.16
 - Better fixes
 
