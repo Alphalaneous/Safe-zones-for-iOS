@@ -155,6 +155,7 @@ class $classModify(CCScene) {
     void modify() {
         addOnEnterCallback([this] {
             auto firstChild = getChildByIndex(0);
+            if (!firstChild) return;
             if (std::find(g_exclusionsClass.begin(), g_exclusionsClass.end(), geode::cocos::getObjectName(firstChild)) != g_exclusionsClass.end()) return;
             modifyButtons(firstChild);
         });
